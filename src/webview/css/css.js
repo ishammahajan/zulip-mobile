@@ -78,22 +78,12 @@ hr {
 }
 .timerow {
   text-align: center;
-  color: #999;
-  display: flex;
-  align-items: center;
-  padding: 0.5em 0;
-}
-.timerow-left,
-.timerow-right {
-  flex: 1;
-  height: 1px;
   margin: 0.5em;
 }
-.timerow-left {
-  background: -webkit-linear-gradient(left, transparent 10%, #999 100%);
-}
-.timerow-right {
-  background: -webkit-linear-gradient(left, #999 0%, transparent 90%);
+.timerow-content {
+  background: #ccc;
+  border-radius: 0.5em;
+  padding: 0.25em 0.5em;
 }
 .timestamp {
   color: #999;
@@ -481,7 +471,7 @@ body {
   color: #d5d9dd;
   background: #212D3B;
 }
-.topic-header {
+.topic-header, .timerow-content {
   background: #54606E;
 }
 .highlight {
