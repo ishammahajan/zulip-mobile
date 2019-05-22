@@ -129,6 +129,16 @@ function walkToMessage(start, step) {
   return element;
 }
 
+function walkToTimerowAbove(start) {
+  var element = start;
+
+  while (element && !element.classList.contains('timerow')) {
+    element = element.previousElementSibling;
+  }
+
+  return element;
+}
+
 function firstMessage() {
   return walkToMessage(documentBody.firstElementChild, 'nextElementSibling');
 }
@@ -137,16 +147,14 @@ function lastMessage() {
   return walkToMessage(documentBody.lastElementChild, 'previousElementSibling');
 }
 
-var minOverlap = 20;
-
-function isVisible(element, top, bottom) {
+function isVisible(element, top, bottom, minOverlap) {
   var rect = element.getBoundingClientRect();
   return top + minOverlap < rect.bottom && rect.top + minOverlap < bottom;
 }
 
 function someVisibleMessage(top, bottom) {
   function checkVisible(candidate) {
-    return candidate && isVisible(candidate, top, bottom) ? candidate : null;
+    return candidate && isVisible(candidate, top, bottom, 20) ? candidate : null;
   }
 
   var midPeer = midMessagePeer(top, bottom);
@@ -172,7 +180,7 @@ function visibleMessageIds() {
   function walkElements(start, step) {
     var element = start;
 
-    while (element && isVisible(element, top, bottom)) {
+    while (element && isVisible(element, top, bottom, 20)) {
       if (element.classList.contains('message')) {
         var id = idFromMessage(element);
         first = Math.min(first, id);
@@ -190,6 +198,29 @@ function visibleMessageIds() {
     first: first,
     last: last
   };
+}
+
+function getFirstVisibleMessage() {
+  var header = document.getElementsByClassName('header')[0];
+  var top = header ? header.offsetHeight : 0;
+  var bottom = viewportHeight;
+  var message = document.createElement('null');
+
+  function walkElements(start) {
+    var element = start;
+
+    while (element && isVisible(element, top, bottom, 0)) {
+      if (element.classList.contains('message') || element.classList.contains('header')) {
+        message = element;
+      }
+
+      element = element.previousElementSibling;
+    }
+  }
+
+  var start = someVisibleMessage(top, bottom);
+  walkElements(start);
+  return message;
 }
 
 var getMessageNode = function getMessageNode(node) {
@@ -244,6 +275,39 @@ var sendScrollMessage = function sendScrollMessage() {
   prevMessageRange = messageRange;
 };
 
+var dateTimeout;
+
+var handleStickyDatePill = function handleStickyDatePill() {
+  var firstVisibleMessage = getFirstVisibleMessage();
+  var timerowAbove = walkToTimerowAbove(firstVisibleMessage);
+
+  if (!(firstVisibleMessage && timerowAbove)) {
+    return;
+  }
+
+  var replaceableDate = timerowAbove.getElementsByClassName('date-pill')[0].innerHTML;
+  var datePillSticky = document.getElementById('date-pill-sticky');
+
+  if (!datePillSticky) {
+    throw new Error('No date-pill-sticky element!');
+  }
+
+  if (!replaceableDate) {
+    throw new Error('No date-pill element in timerow!');
+  }
+
+  datePillSticky.classList.remove('hide');
+
+  if (datePillSticky.innerHTML !== replaceableDate) {
+    datePillSticky.innerHTML = replaceableDate;
+  }
+
+  clearTimeout(dateTimeout);
+  dateTimeout = setTimeout(function () {
+    return datePillSticky.classList.add('hide');
+  }, 1000);
+};
+
 var sendScrollMessageIfListShort = function sendScrollMessageIfListShort() {
   if (documentBody.scrollHeight === documentBody.clientHeight) {
     sendScrollMessage();
@@ -264,6 +328,7 @@ var handleScrollEvent = function handleScrollEvent() {
   }
 
   sendScrollMessage();
+  handleStickyDatePill();
   var nearEnd = documentBody.offsetHeight - window.scrollY - window.innerHeight > 100;
   showHideElement('scroll-bottom', nearEnd);
 };
