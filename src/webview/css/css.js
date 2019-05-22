@@ -3,7 +3,7 @@ import type { ThemeName } from '../../types';
 import { BRAND_COLOR } from '../../styles';
 import cssEmojis from './cssEmojis';
 
-const defaultTheme = `
+const defaultTheme = (hasRecipientHeaders: boolean) => `
 html {
   -webkit-user-select: none; /* Safari 3.1+ */
   -moz-user-select: none; /* Firefox 2+ */
@@ -76,11 +76,22 @@ hr {
   justify-content: space-between;
   margin-bottom: 0.25em;
 }
+#timerow-persistent {
+  position: fixed;
+  top: ${hasRecipientHeaders ? '2.3em' : '0.3em'};
+  left: 50%;
+  z-index: 100;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.2), 0 2px 4px 0 rgba(0, 0, 0, 0.2);
+  transform: translateX(-50%);
+}
+#timerow-persistent:empty {
+  display: none;
+}
 .timerow {
   text-align: center;
   margin: 0.5em;
 }
-.timerow-content {
+.timerow-content, #timerow-persistent {
   background: #ccc;
   border-radius: 0.5em;
   padding: 0.25em 0.5em;
@@ -135,7 +146,7 @@ hr {
   position: -webkit-sticky;
   position: sticky;
   top: -1px;
-  z-index: 100;
+  z-index: 10;
   display: flex;
   justify-content: space-between;
 }
@@ -479,9 +490,9 @@ body {
 }
 `;
 
-export default (theme: ThemeName) => `
+export default (theme: ThemeName, hasRecipientHeaders: boolean) => `
 <style>
-${defaultTheme}
+${defaultTheme(hasRecipientHeaders)}
 ${theme === 'night' ? darkTheme : ''}
 ${cssEmojis}
 </style>
