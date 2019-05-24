@@ -76,7 +76,7 @@ hr {
   justify-content: space-between;
   margin-bottom: 0.25em;
 }
-#timerow-persistent {
+#date-pill-sticky {
   position: fixed;
   top: ${hasRecipientHeaders ? '2.3em' : '0.3em'};
   left: 50%;
@@ -84,14 +84,14 @@ hr {
   box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.2), 0 2px 4px 0 rgba(0, 0, 0, 0.2);
   transform: translateX(-50%);
 }
-#timerow-persistent:empty {
+#date-pill-sticky:empty {
   display: none;
 }
 .timerow {
   text-align: center;
   margin: 0.5em;
 }
-.timerow-content, #timerow-persistent {
+.date-pill, #date-pill-sticky {
   background: #ccc;
   border-radius: 0.5em;
   padding: 0.25em 0.5em;
@@ -482,7 +482,7 @@ body {
   color: #d5d9dd;
   background: #212D3B;
 }
-.topic-header, .timerow-content {
+.topic-header, .date-pill {
   background: #54606E;
 }
 .highlight {
