@@ -76,11 +76,19 @@ hr {
   justify-content: space-between;
   margin-bottom: 0.25em;
 }
-#date-pill-sticky {
+#date-pill-sticky-container {
   position: fixed;
-  top: ${hasRecipientHeaders ? '2.3em' : '0.3em'};
-  left: 50%;
+  top: ${hasRecipientHeaders ? '1.9em' : '0'};
+  height: 100%;
+  width: 100%;
+  text-align: center;
+  overflow: hidden;
   z-index: 100;
+  pointer-events: none;
+}
+#date-pill-sticky {
+  position: relative;
+  top: 0.5em;
   box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.2), 0 2px 4px 0 rgba(0, 0, 0, 0.2);
   transform: translateX(-50%);
   transition: top 0.2s;

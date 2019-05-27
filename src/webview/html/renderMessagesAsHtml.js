@@ -12,7 +12,7 @@ export default (
   renderedMessages: RenderedSectionDescriptor[],
 ): string => {
   const pieces = [];
-  pieces.push('<div id="date-pill-sticky"></div>');
+  pieces.push('<div id="date-pill-sticky-container"><span id="date-pill-sticky"></span></div>');
   renderedMessages.forEach(section => {
     pieces.push(messageHeaderAsHtml(backgroundData, narrow, section.message));
     section.data.forEach(item => {
